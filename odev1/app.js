@@ -1,62 +1,59 @@
-const { ApolloServer, gql } = require("apollo-server");
-const {
-  ApolloServerPluginLandingPageGraphQLPlayground,
-} = require("apollo-server-core");
+const {GraphQLServer,PubSub} =require('graphql-yoga');
 const {nanoid}= require("nanoid");
-
+const {pubSub}= require("./pubSub");
 const { users, events, locations, participants } = require("./data");
 
-const typeDefs = gql`
+const typeDefs =`
 
   type User {
-    id: ID!
-    fullName: String!
-    events: [Event!]
+      id: ID!
+      fullName: String!
+      events: [Event!]
   }
 
   type Event {
-    id: ID
-    user_id: ID
-    user:User
-    name: String
-    location_id: ID
-    location:Location!
-    participants: [Participant!]
+      id: ID
+      user_id: ID
+      user:User
+      name: String
+      location_id: ID
+      location:Location!
+      participants: [Participant!]
   }
 
   input EventUpdateInput{
-    name: String
-    location_id: ID
+      name: String
+      location_id: ID
   }
 
   type Location {
-    id: ID
-    place: String!
+      id: ID
+      place: String!
   }
 
   type Participant {
-    id: ID!
-    user_id: ID!
-    event_id: ID!
+      id: ID!
+      user_id: ID!
+      event_id: ID!
   }
 
   type Query {
 
-    users: [User!]
-    user(id: ID!): User!
+      users: [User!]
+      user(id: ID!): User!
 
-    events: [Event!]
-    event(id: ID!): Event!
+      events: [Event!]
+      event(id: ID!): Event!
 
-    locations: [Location!]
-    location(id: ID!): Location!
+      locations: [Location!]
+      location(id: ID!): Location!
 
-    participants: [Participant!]
-    participant(id: ID): Participant!
+      participants: [Participant!]
+      participant(id: ID): Participant!
   }
 
   type DeleteOutput {
-    countOfDeletedItem:Int!
+      countOfDeletedItem:Int!
   }
 
   type Mutation {
@@ -65,30 +62,59 @@ const typeDefs = gql`
       deleteUser(id:ID!):User!
       deleteAllUsers:DeleteOutput!
 
-      createEvent(fullName:String!):Event!
+      createEvent(name:String!,user_id:ID!,location_id:ID!):Event!
       updateEvent(id:ID!,data:EventUpdateInput!):Event!
       deleteEvent(id:ID!):Event!
       deleteAllEvents:DeleteOutput!
 
-      createLocation(fullName:String!):Location!
+      createLocation(place:String!):Location!
       updateLocation(id:ID!,place:String!):Location!
       deleteLocation(id:ID!):Location!
       deleteAllLocations:DeleteOutput!
 
-      createParticipant(fullName:String!):Participant!
+      createParticipant(event_id:ID!,user_id:ID!):Participant!
       updateParticipant(id:ID!,event_id:ID!):Participant!
       deleteParticipant(id:ID!):Participant!
       deleteAllParticipants:DeleteOutput!
   }
+
+  type Subscription {
+      userAdded:User!
+      eventAdded:Event!
+      participantAdded:Participant!
+
+  }
 `;
 
 const resolvers = {
+  Subscription:{
+    userAdded:{
+      subscribe:(_,args,{pubSub})=>{
+       return pubSub.asyncIterator('userAdded');
+      }
+    },
+    eventAdded:{
+      subscribe: (_, args,{pubSub})=>{
+        return pubSub.asyncIterator('eventAdded');
+
+      }
+    },
+    participantAdded:{
+      subscribe: (_, args,{pubSub})=>{
+        return pubSub.asyncIterator('participantAdded');
+
+      }
+    }
+
+    
+  },
   Mutation:{
-    createUser:(_, args)=>{
+    createUser:(_, args,{pubSub})=>{
 
         const newUser={id:nanoid(),fullName:args.fullName}
 
         users.push(newUser);
+        pubSub.publish('userAdded',{userAdded:newUser});
         return newUser;
     },
     updateUser:(_, {id,fullName})=>{
@@ -133,6 +159,7 @@ const resolvers = {
       const NewEvent={id:nanoid(),name,user_id,location_id}
 
       events.push(NewEvent);
+      pubSub.publish('eventAdded',{eventAdded:NewEvent});
       return NewEvent;
     },
     updateEvent:(_,{id,data})=>{
@@ -217,6 +244,8 @@ const resolvers = {
       const NewParticipant={id:nanoid(),user_id,event_id}
 
       participants.push(NewParticipant);
+
+      pubSub.publish('participantAdded',{participantAdded:NewParticipant});
       return NewParticipant;
     },
     updateParticipant:(_,{id,event_id})=>{
@@ -304,12 +333,10 @@ const resolvers = {
  
 };
 
-const server = new ApolloServer({
+const server = new GraphQLServer({
   typeDefs,
   resolvers,
-  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+  context:{pubSub}
 });
 
-server.listen().then(({ url }) => {
-  console.log(`Server listening on ${url} 🚀`);
-});
+server.start(({port})=>{console.log('Server is running on port : ',port)})
