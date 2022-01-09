@@ -1,6 +1,6 @@
 const User= {
-    events: (parent) => {
-      return events.filter((e) => e.user_id === parent.id);
+    events: (parent,__,{db}) => {
+      return db.events.filter((e) => e.user_id === parent.id);
     },
   }
 

@@ -1,41 +1,41 @@
 const Mutation={
-    createUser:(_, args,{pubSub})=>{
+    createUser:(_, args,{pubSub,db})=>{
 
         const newUser={id:nanoid(),fullName:args.fullName}
 
-        users.push(newUser);
+        db.users.push(newUser);
         pubSub.publish('userAdded',{userAdded:newUser});
         return newUser;
     },
-    updateUser:(_, {id,fullName})=>{
+    updateUser:(_, {id,fullName,db})=>{
 
-      const isExist=users.find(u=>u.id === id);
+      const isExist=db.users.find(u=>u.id === id);
 
       if(isExist===-1){
         throw new Error('User not found')
       }
 
-      const updatedUser=users[isExist]={...users[isExist],...fullName}
+      const updatedUser=db.users[isExist]={...db.users[isExist],...fullName}
       return updatedUser;
 
     },
-    deleteUser:(_, {id})=>{
-      const isExist=users.find(u=>u.id === id);
+    deleteUser:(_, {id},{db})=>{
+      const isExist=db.users.find(u=>u.id === id);
 
       if(isExist===-1){
         throw new Error('User not found')
       }
 
-      const deletedUser=users[isExist];
+      const deletedUser=db.users[isExist];
 
-      users.splice(isExist, 1);
+      db.users.splice(isExist, 1);
 
       return deletedUser;
     },
-    deleteAllUsers:()=>{
-      const length = users.length;
+    deleteAllUsers:(_,__,{db})=>{
+      const length = db.users.length;
 
-      users.splice(0,length);
+      db.users.splice(0,length);
 
       return {
         countOfDeletedItem:length
@@ -44,41 +44,41 @@ const Mutation={
     },
 
 
-    createEvent:(_, {name,user_id,location_id})=>{
+    createEvent:(_, {name,user_id,location_id},{db})=>{
       
       const NewEvent={id:nanoid(),name,user_id,location_id}
 
-      events.push(NewEvent);
+      db.events.push(NewEvent);
       pubSub.publish('eventAdded',{eventAdded:NewEvent});
       return NewEvent;
     },
-    updateEvent:(_,{id,data})=>{
-      const isExist=events.find(e=>e.id === id);
+    updateEvent:(_,{id,data},{db})=>{
+      const isExist=db.events.find(e=>e.id === id);
 
       if(isExist===-1){
         throw new Error('User not found')
       }
 
-      const updatedUser=events[isExist]={...events[isExist],...data}
+      const updatedUser=db.events[isExist]={...db.events[isExist],...data}
       return updatedUser;
     },
-    deleteEvent:(_, {id})=>{
-      const isExist=events.find(e=>e.id === id);
+    deleteEvent:(_, {id},{db})=>{
+      const isExist=db.events.find(e=>e.id === id);
 
       if(isExist===-1){
         throw new Error('Event not found')
       }
 
-      const deletedEvent=events[isExist];
+      const deletedEvent=db.events[isExist];
 
-      events.splice(isExist, 1);
+      db.events.splice(isExist, 1);
 
       return deletedEvent;
     },
-    deleteAllEvents:()=>{
-      const length = events.length;
+    deleteAllEvents:(_,__,{db})=>{
+      const length = db.events.length;
 
-      events.splice(0,length);
+      db.events.splice(0,length);
 
       return {
         countOfDeletedItem:length
@@ -87,39 +87,39 @@ const Mutation={
     },
 
 
-    createLocation:(_, {place})=>{
+    createLocation:(_, {place},{db})=>{
       const NewLocation={id:nanoid(),place}
 
-      locations.push(NewLocation);
+      db.locations.push(NewLocation);
       return NewLocation;
     },
-    updateLocation:(_,{id,place})=>{
-      const isExist=locations.find(u=>u.id === id);
+    updateLocation:(_,{id,place},{db})=>{
+      const isExist=db.locations.find(u=>u.id === id);
 
       if(isExist===-1){
         throw new Error('Location not found')
       }
 
-      const updatedLocation=locations[isExist]={...locations[isExist],...place}
+      const updatedLocation=db.locations[isExist]={...db.locations[isExist],...place}
       return updatedLocation;
     },
-    deleteLocation:(_, {id})=>{
-      const isExist=locations.find(l=>l.id === id);
+    deleteLocation:(_, {id},{db})=>{
+      const isExist=db.locations.find(l=>l.id === id);
 
       if(isExist===-1){
         throw new Error('Location not found')
       }
 
-      const deletedLocation=locations[isExist];
+      const deletedLocation=db.locations[isExist];
 
-      locations.splice(isExist, 1);
+      db.locations.splice(isExist, 1);
 
       return deletedLocation;
     },
-    deleteAllLocations:()=>{
-      const length = locations.length;
+    deleteAllLocations:(_,__,{db})=>{
+      const length = db.locations.length;
 
-      locations.splice(0,length);
+      db.locations.splice(0,length);
 
       return {
         countOfDeletedItem:length
@@ -129,42 +129,42 @@ const Mutation={
 
 
 
-    createParticipant:(_, {event_id,user_id})=>{
+    createParticipant:(_, {event_id,user_id},{db})=>{
 
       const NewParticipant={id:nanoid(),user_id,event_id}
 
-      participants.push(NewParticipant);
+      db.participants.push(NewParticipant);
 
       pubSub.publish('participantAdded',{participantAdded:NewParticipant});
       return NewParticipant;
     },
-    updateParticipant:(_,{id,event_id})=>{
-      const isExist=participants.find(p=>p.id === id);
+    updateParticipant:(_,{id,event_id},{db})=>{
+      const isExist=db.participants.find(p=>p.id === id);
 
       if(isExist===-1){
         throw new Error('Participant not found')
       }
 
-      const updatedParticipant=participants[isExist]={...participants[isExist],...event_id}
+      const updatedParticipant=db.participants[isExist]={...db.participants[isExist],...event_id}
       return updatedParticipant;
     },
-    deleteParticipant:(_, {id})=>{
-      const isExist=participants.find(p=>p.id === id);
+    deleteParticipant:(_, {id},{db})=>{
+      const isExist=db.participants.find(p=>p.id === id);
 
       if(isExist===-1){
         throw new Error('Participant not found')
       }
 
-      const deletedParticipant=participants[isExist];
+      const deletedParticipant=db.participants[isExist];
 
-      participants.splice(isExist, 1);
+      db.participants.splice(isExist, 1);
 
       return deletedParticipant;
     },
-    deleteAllParticipants:()=>{
-      const length = participants.length;
+    deleteAllParticipants:(_,__,{db})=>{
+      const length = db.participants.length;
 
-      participants.splice(0,length);
+      db.participants.splice(0,length);
 
       return {
         countOfDeletedItem:length

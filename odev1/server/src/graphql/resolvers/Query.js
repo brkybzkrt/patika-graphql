@@ -1,33 +1,33 @@
 const Query ={
 
     
-        user: (_, args) => {
-          return users.find((user) => user.id === args.id);
+        user: (_, args,{db}) => {
+          return db.users.find((user) => user.id === args.id);
         },
-        users: () => {
-          return users;
-        },
-    
-    
-        event:(_, args) => {
-          return events.find((event) => event.id === args.id)
-        },
-        events: () => {
-          return events;
+        users: (_,__,{db}) => {
+          return db.users;
         },
     
-        location:(_, args) => {
-          return locations.find((location) => location.id === args.id)
+    
+        event:(_, args,{db}) => {
+          return db.events.find((event) => event.id === args.id)
         },
-        locations: () => {
-          return locations;
+        events: (_,__,{db}) => {
+          return db.events;
         },
     
-        participant:(_, args) => {
-          return participants.find((participant) => participant.id === args.id)
+        location:(_, args,{db}) => {
+          return db.locations.find((location) => location.id === args.id)
         },
-        participants: () => {
-          return participants;
+        locations: (_,__,{db}) => {
+          return db.locations;
+        },
+    
+        participant:(_, args,{db}) => {
+          return db.participants.find((participant) => participant.id === args.id)
+        },
+        participants: (_,__,{db}) => {
+          return db.participants;
         },
         
     
