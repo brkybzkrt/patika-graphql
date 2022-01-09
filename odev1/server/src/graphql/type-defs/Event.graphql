@@ -1,0 +1,25 @@
+type Event {
+  id: ID
+  user_id: ID
+  user: User
+  name: String
+  location_id: ID
+  location: Location!
+  participants: [Participant!]
+}
+
+type Query {
+  events: [Event!]
+  event(id: ID!): Event!
+}
+
+type Mutation {
+  createEvent(name: String!, user_id: ID!, location_id: ID!): Event!
+  updateEvent(id: ID!, data: EventUpdateInput!): Event!
+  deleteEvent(id: ID!): Event!
+  deleteAllEvents: DeleteOutput!
+}
+
+type Subscription {
+  eventAdded: Event!
+}

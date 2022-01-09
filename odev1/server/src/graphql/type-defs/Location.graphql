@@ -1,0 +1,16 @@
+type Location {
+  id: ID
+  place: String!
+}
+
+type Query {
+  locations: [Location!]
+  location(id: ID!): Location!
+}
+
+type Mutation {
+  createLocation(place: String!): Location!
+  updateLocation(id: ID!, place: String!): Location!
+  deleteLocation(id: ID!): Location!
+  deleteAllLocations: DeleteOutput!
+}

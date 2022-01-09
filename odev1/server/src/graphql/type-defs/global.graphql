@@ -1,0 +1,9 @@
+  input EventUpdateInput{
+      name: String
+      location_id: ID
+  }
+
+
+  type DeleteOutput {
+      countOfDeletedItem:Int!
+  }

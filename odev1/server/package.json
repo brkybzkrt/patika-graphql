@@ -4,6 +4,8 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
+    "@graphql-tools/load-files": "^6.5.3",
+    "@graphql-tools/merge": "^8.2.1",
     "dotenv": "^10.0.0",
     "graphql-redis-subscriptions": "^2.4.2",
     "graphql-yoga": "^1.18.3",
@@ -14,7 +16,7 @@
     "nodemon": "^2.0.15"
   },
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon ./src/app.js"
   },
   "keywords": [],
   "author": "",
