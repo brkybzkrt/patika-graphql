@@ -1,0 +1,10 @@
+.col{
+    border-radius: 5px;
+    background-color: rgb(221, 153, 88);
+    padding: 10px;
+    color: rgb(255, 255, 255);
+}
+.list {
+    background-color: rgb(221, 207, 168);
+}
+
