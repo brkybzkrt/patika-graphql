@@ -44,9 +44,9 @@ const Mutation={
     },
 
 
-    createEvent:(_, {name,user_id,location_id},{db})=>{
+    createEvent:(_, {name, user_id, location_id, description, time},{db})=>{
       
-      const NewEvent={id:nanoid(),name,user_id,location_id}
+      const NewEvent={id:nanoid(),name,user_id,location_id,description,time}
 
       db.events.push(NewEvent);
       pubSub.publish('eventAdded',{eventAdded:NewEvent});

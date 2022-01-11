@@ -26,7 +26,11 @@ const Query ={
         participant:(_, args,{db}) => {
           return db.participants.find((participant) => participant.id === args.id)
         },
-        participants: (_,__,{db}) => {
+        participants: (_,{eventId},{db}) => {
+
+          if(eventId){
+             return db.participants.filter((participant) => participant.event_id === eventId);
+          }
           return db.participants;
         },
         

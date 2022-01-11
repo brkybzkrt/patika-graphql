@@ -3,9 +3,18 @@ type Event {
   user_id: ID
   user: User
   name: String
+  time: String
+  description: String
   location_id: ID
   location: Location!
   participants: [Participant!]
+}
+
+input EventUpdateInput {
+  name: String
+  location_id: ID
+  description: String
+  time: String
 }
 
 type Query {
@@ -14,7 +23,13 @@ type Query {
 }
 
 type Mutation {
-  createEvent(name: String!, user_id: ID!, location_id: ID!): Event!
+  createEvent(
+    name: String!
+    time: String
+    description: String
+    user_id: ID!
+    location_id: ID!
+  ): Event!
   updateEvent(id: ID!, data: EventUpdateInput!): Event!
   deleteEvent(id: ID!): Event!
   deleteAllEvents: DeleteOutput!

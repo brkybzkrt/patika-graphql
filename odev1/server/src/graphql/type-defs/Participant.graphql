@@ -2,10 +2,11 @@ type Participant {
   id: ID!
   user_id: ID!
   event_id: ID!
+  user:User
 }
 
 type Query {
-  participants: [Participant!]
+  participants(eventId: ID):[Participant!]
   participant(id: ID): Participant!
 }
 
