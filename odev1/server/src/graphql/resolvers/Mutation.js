@@ -1,3 +1,5 @@
+const {nanoid} =require('nanoid');
+
 const Mutation={
     createUser:(_, args,{pubSub,db})=>{
 
@@ -44,11 +46,11 @@ const Mutation={
     },
 
 
-    createEvent:(_, {name, user_id, location_id, description, time},{db})=>{
+    createEvent:(_, {name, user_id, location_id, description, time},{db,pubSub})=>{
       
       const NewEvent={id:nanoid(),name,user_id,location_id,description,time}
 
-      db.events.push(NewEvent);
+      db.events.unshift(NewEvent);
       pubSub.publish('eventAdded',{eventAdded:NewEvent});
       return NewEvent;
     },
@@ -129,7 +131,7 @@ const Mutation={
 
 
 
-    createParticipant:(_, {event_id,user_id},{db})=>{
+    createParticipant:(_, {event_id,user_id},{db,pubSub})=>{
 
       const NewParticipant={id:nanoid(),user_id,event_id}
 
