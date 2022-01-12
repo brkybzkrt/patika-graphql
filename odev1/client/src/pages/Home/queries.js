@@ -13,7 +13,18 @@ query getEvents {
 }
 `;
 
+export const SUBSCRIPTION_EVENTS = gql`
 
+subscription eventSub{
+  eventAdded {
+    id
+    name
+    description
+    time
+  }
+}
+
+`
 
 
 

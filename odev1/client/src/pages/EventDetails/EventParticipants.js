@@ -1,16 +1,38 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLazyQuery } from "@apollo/client";
-import { GET_EVENT_PARTICIPANTS } from './queries';
+import { GET_EVENT_PARTICIPANTS, PARTICIPANTS_SUBSCRIPTION } from './queries';
 import { Button, Divider, List, Spin } from 'antd';
 import styles from './styles.module.css';
 
 function EventParticipants({eventId}) {
 
-    const [getEventParticipants, { loading, error, data }] = useLazyQuery(
+    const [getEventParticipants, { loading, error, data,subscribeToMore,called }] = useLazyQuery(
         GET_EVENT_PARTICIPANTS,
         { variables: { eventId: eventId } }
       );
 
+      useEffect(() => {
+
+        if(!loading && called) {
+
+            subscribeToMore({ 
+          document:PARTICIPANTS_SUBSCRIPTION,
+          updateQuery:(prev,{subscriptionData})=>{
+            if(!subscriptionData.data) return prev;
+
+            return {
+              participants:[...prev.participants,subscriptionData.data.participantAdded]
+                
+              }
+            }
+          }
+        )
+
+      }
+        
+
+
+      }, [subscribeToMore,loading,called]);
 
     if (error) return `Error! ${error.message}`;
 

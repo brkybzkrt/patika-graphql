@@ -33,4 +33,17 @@ query participants($eventId: ID) {
 }
 
 `
+export const PARTICIPANTS_SUBSCRIPTION= gql`  
+
+subscription participantSub($eventId: ID) {
+  participantAdded(eventId:$eventId) {
+    user_id
+    user {
+      fullName
+    }
+  }
+}
+
+`
+
 

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Spin, Space, List } from 'antd';
 
 
 import { useQuery } from "@apollo/client";
-import { GET_EVENTS } from "./queries";
+import { GET_EVENTS,SUBSCRIPTION_EVENTS } from "./queries";
 import { NavLink } from "react-router-dom";
 
 
@@ -11,9 +11,21 @@ import { NavLink } from "react-router-dom";
 
 function Home() {
   
-  const { loading, error, data } = useQuery(GET_EVENTS);
+  const {loading, error, data ,subscribeToMore} = useQuery(GET_EVENTS);
 
- 
+ useEffect(() => {
+   subscribeToMore({
+     document:SUBSCRIPTION_EVENTS,
+     updateQuery:(prev,{subscriptionData}) => {
+
+        if(!subscriptionData.data) return prev;
+
+        return {
+          events:[subscriptionData.data.eventAdded,...prev.events]
+        }
+     }
+   })
+ }, [subscribeToMore])
 
   if (loading) {
     return <Space size="middle"><Spin size="large" /></Space>
