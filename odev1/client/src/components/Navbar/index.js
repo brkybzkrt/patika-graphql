@@ -10,7 +10,7 @@ function Navbar() {
          <NavLink to="/">Home</NavLink>
         </Menu.Item>
         <Menu.Item key="new" icon={<AppstoreAddOutlined />}>
-        <NavLink to="/newPost">Add New Post</NavLink> 
+        <NavLink to="/addNewEvent">Add New Event</NavLink> 
         </Menu.Item>
      
       </Menu>

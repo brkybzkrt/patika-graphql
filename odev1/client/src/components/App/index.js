@@ -6,6 +6,7 @@ import Home from "pages/Home"; // "../../pages/Home"
 
 import EventDetails from "pages/EventDetails";
 import Navbar from "components/Navbar";
+import AddNewEvent from "pages/AddNewEvent";
 function App() {
   return (
     <div className="App">
@@ -16,7 +17,7 @@ function App() {
        
         <Route path="/" exact component={Home}/>
         <Route path="/event-details/:id" component={EventDetails}/>
-         
+        <Route path="/addNewEvent" component={AddNewEvent}/>
         
           
         
