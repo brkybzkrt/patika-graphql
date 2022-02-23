@@ -5,7 +5,7 @@ const {pubSub}= require("./pubSub");
 const db = require("./data");
 
 
-
+let deneme;
 
 const server = new GraphQLServer({
   typeDefs,
